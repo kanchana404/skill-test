@@ -1,26 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Correct import for useRouter
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { checkToken } from "../api/login";
 import { fetchData } from "../api/fetch";
+import HotelCard from "@/components/HotelCard";
 import Image from "next/image";
 
+
 interface Property {
-  id: number,
-  property_name: string,
-  property_code: string,
-  check_in: string,
-  check_out: string,
-  bedrooms: number,
-  adults: number,
-  children: number,
-  parking: number,
-  pets: number,
-  price: number,
-  website: string,
-  website_image: string
+  id: number;
+  property_name: string;
+  property_code: string;
+  check_in: string;
+  check_out: string;
+  bedrooms: number;
+  adults: number;
+  children: number;
+  parking: number;
+  pets: number;
+  price: number;
+  website: string;
+  website_image: string;
 }
 
 const DataPage = () => {
@@ -98,12 +100,12 @@ const DataPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-screen-xl bg-white shadow-lg rounded-lg p-6">
         <div className="mb-6 text-center w-full">
-          <Image 
+          <Image
             src="/logo.png"
             alt="Company Logo"
             width={200}
             height={100}
-            priority // Ensures the logo is preloaded
+            priority
           />
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
@@ -118,67 +120,7 @@ const DataPage = () => {
           </button>
         </div>
         {data.length > 0 ? (
-          data.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col sm:flex-row justify-between items-center border rounded-lg p-4 mb-4 shadow-sm"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="relative w-40 h-40">
-                  <Image
-                    src={item.website_image}
-                    alt={item.property_name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg"
-                  />
-                  <a
-                    href={`https://${item.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute bottom-0 inset-x-0 bg-white bg-opacity-70 text-center py-1 rounded-b-lg transition-transform transform hover:scale-105"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    Visit Website
-                  </a>
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-800">{item.property_name}</h2>
-                  <p className="text-gray-500">Property code: {item.property_code}</p>
-                  <p>Check in: {item.check_in} Check out: {item.check_out}</p>
-                  <div className="flex flex-wrap items-center space-x-2 mt-2 lg:space-x-4">
-                    <div className="flex items-center">
-                      <Image src="/bed.png" alt="Bedrooms" width={20} height={20} />
-                      <span className="ml-2">{item.bedrooms} Bedrooms</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Image src="/adult.png" alt="Adults" width={20} height={20} />
-                      <span className="ml-2">{item.adults} Adults</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Image src="/child.png" alt="Children" width={20} height={20} />
-                      <span className="ml-2">{item.children} Children</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Image src="/park.png" alt="Parking" width={20} height={20} />
-                      <span className="ml-2">{item.parking} Parking</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Image src="/pet.png" alt="Pets" width={20} height={20} />
-                      <span className="ml-2">{item.pets} Pets</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-center mt-4 sm:mt-0">
-                <span className="text-xl font-bold text-purple-500">${item.price.toFixed(2)}</span>
-                <button className="mt-2 py-2 px-4 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600">
-                  Select
-                </button>
-
-              </div>
-            </div>
-          ))
+          data.map((item) => <HotelCard key={item.id} property={item} />)
         ) : (
           <p className="text-center text-gray-600">No data available.</p>
         )}
