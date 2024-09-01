@@ -125,11 +125,22 @@ const DataPage = () => {
             >
               <div className="flex items-center space-x-4">
                 <div className="relative w-40 h-40">
-                  <img
+                  <Image
                     src={item.website_image}
                     alt={item.property_name}
-                    className="w-full h-full object-cover rounded-lg"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-lg"
                   />
+                  <a
+                    href={`https://${item.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-0 inset-x-0 bg-white bg-opacity-70 text-center py-1 rounded-b-lg transition-transform transform hover:scale-105"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    Visit Website
+                  </a>
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-gray-800">{item.property_name}</h2>
@@ -164,6 +175,7 @@ const DataPage = () => {
                 <button className="mt-2 py-2 px-4 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600">
                   Select
                 </button>
+
               </div>
             </div>
           ))
