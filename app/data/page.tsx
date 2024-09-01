@@ -100,7 +100,7 @@ const DataPage = () => {
       
 
       <div className="w-full max-w-screen-xl p-8 bg-white shadow-lg rounded-lg mb-6">
-      <div className="mb-6 text-start w-full">
+        <div className="mb-6 text-start w-full">
         <Image 
           src="/logo.png"  // Update this path to the actual logo path
           alt="Company Logo"
