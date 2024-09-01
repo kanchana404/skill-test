@@ -1,103 +1,79 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import { login } from './api/login';
 
-const Home = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (email && password) {
-      try {
-        const response = await fetch('https://skill-test.similater.website/api/v1/user/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
+    try {
+      const response = await login(email, password);
+      if (response.status) {
+        localStorage.setItem('authToken', response.data.accessToken);
+        Swal.fire({
+          title: 'Success!',
+          text: 'Logged in successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          router.push('/data');
         });
-
-        const data = await response.json();
-
-        if (data.status && data.data.accessToken) {
-          // Store the received token in localStorage
-          localStorage.setItem('authToken', data.data.accessToken);
-          // Show success message
-          Swal.fire({
-            title: 'Success!',
-            text: 'You have successfully logged in.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            router.push('/data');
-          });
-        } else {
-          // Show error message for invalid credentials
-          Swal.fire({
-            title: 'Error!',
-            text: 'Invalid email or password.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        }
-      } catch (error) {
-        console.error('Error during sign-in:', error);
-        // Show error message for network or other issues
+      } else {
         Swal.fire({
           title: 'Error!',
-          text: 'An error occurred during sign-in. Please try again later.',
+          text: response.message || 'Invalid login credentials.',
           icon: 'error',
           confirmButtonText: 'OK'
         });
       }
-    } else {
-      // Show warning if fields are empty
+    } catch (error) {
       Swal.fire({
-        title: 'Warning!',
-        text: 'Please enter email and password.',
-        icon: 'warning',
+        title: 'Error!',
+        text: 'An error occurred during login.',
+        icon: 'error',
         confirmButtonText: 'OK'
       });
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Sign In</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium">Email</label>
+            <label htmlFor="email" className="block text-gray-700">Email:</label>
             <input
-              id="email"
               type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded"
               required
-              className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-700 font-medium">Password</label>
+            <label htmlFor="password" className="block text-gray-700">Password:</label>
             <input
-              id="password"
               type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 p-2 w-full border border-gray-300 rounded"
               required
-              className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Sign In
+            Log In
           </button>
         </form>
       </div>
@@ -105,4 +81,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default LoginPage;
